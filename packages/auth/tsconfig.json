@@ -1,0 +1,4 @@
+{
+  "extends": "@sourcelane/typescript/library.json",
+  "include": ["src/**/*"]
+}

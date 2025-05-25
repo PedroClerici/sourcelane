@@ -1,0 +1,8 @@
+{
+	"name": "@sourcelane/biome",
+	"type": "module",
+	"private": "true",
+	"devDependencies": {
+		"@biomejs/biome": "2.0.0-beta.5"
+	}
+}
