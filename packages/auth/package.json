@@ -9,5 +9,9 @@
   "devDependencies": {
     "@sourcelane/biome": "workspace:*",
     "@sourcelane/typescript": "workspace:*"
+  },
+  "dependencies": {
+    "@casl/ability": "^6.7.3",
+    "zod": "^3.25.30"
   }
 }
