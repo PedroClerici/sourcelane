@@ -1,6 +1,9 @@
 import 'zod-openapi/extend'
+import { hash } from 'bcryptjs'
+import { eq } from 'drizzle-orm'
 import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
+import { db, tables } from '@/lib/drizzle'
 
 export default async function createAccount(app: FastifyZodOpenApiInstance) {
   app.post('/users', {
@@ -12,24 +15,25 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
         email: z.string().openapi({ example: 'john.doe@example.com' }),
         password: z.string().min(6).openapi({ example: '123456' }),
       }),
-      response: {
-        200: z.object({
-          id: z.string().uuid(),
-          name: z.string().openapi({ example: 'John Doe' }),
-          email: z.string().openapi({ example: 'john.doe@example.com' }),
-        }),
-      },
     },
     handler: async (request, reply) => {
-      const { name, email } = request.body
+      const { name, email, password } = request.body
 
-      const users = {
-        id: crypto.randomUUID(),
-        name,
-        email,
+      const userWithSameEmail = await db.query.users.findFirst({
+        where: eq(tables.users.email, email),
+      })
+
+      if (userWithSameEmail) {
+        return reply
+          .status(400)
+          .send({ message: 'user with same e-mail already exists.' })
       }
 
-      return reply.status(200).send(users)
+      const passwordHash = await hash(password, 6)
+
+      await db.insert(tables.users).values({ name, email, passwordHash })
+
+      return reply.status(201).send()
     },
   })
 }
