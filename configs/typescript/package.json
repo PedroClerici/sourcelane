@@ -2,6 +2,7 @@
   "name": "@sourcelane/typescript",
   "private": true,
   "files": [
-    "library.json"
+    "library.json",
+    "node.json"
   ]
 }
