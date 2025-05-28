@@ -3,8 +3,8 @@
 
   "compilerOptions": {
     "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"],
-    "module": "nodenext",
-    "target": "es2022",
+    "module": "NodeNext",
+    "target": "es2023",
 
     "strict": true,
     "esModuleInterop": true,

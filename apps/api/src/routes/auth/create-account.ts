@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm'
 import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
+import { ConflictError } from '@/utils/errors'
 
 export default async function createAccount(app: FastifyZodOpenApiInstance) {
   app.post('/users', {
@@ -24,9 +25,10 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
       })
 
       if (userWithSameEmail) {
-        return reply
-          .status(400)
-          .send({ message: 'user with same e-mail already exists.' })
+        throw new ConflictError(
+          'User already exists.',
+          'A user with the same email already exists.',
+        )
       }
 
       const passwordHash = await hash(password, 6)

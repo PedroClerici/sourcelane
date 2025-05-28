@@ -1,5 +1,4 @@
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 import autoLoad from '@fastify/autoload'
 import fastifyCors from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
@@ -12,11 +11,15 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-zod-openapi'
+import { errorHandler, notFoundHandler } from './utils/errors'
 
-const app = fastify({ logger: true })
+const app = fastify()
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
+
+app.setErrorHandler(errorHandler)
+app.setNotFoundHandler(notFoundHandler)
 
 app.withTypeProvider<FastifyZodOpenApiTypeProvider>()
 
@@ -55,16 +58,14 @@ app.register(import('@scalar/fastify-api-reference'), {
 
 app.register(fastifyCors)
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 app.register(autoLoad, {
   dir: join(__dirname, 'routes'),
 })
 
-await app.ready()
-await app.listen({
-  port: 5000,
-  listenTextResolver: address => {
-    return `Server is listening at ${address}`
-  },
+app.listen({ port: 5000 }).then(() => {
+  const url = 'http://localhost:5000'
+  console.log(
+    `Server is running on ${url}.`,
+    `Access API documentation at ${url}/docs.`,
+  )
 })

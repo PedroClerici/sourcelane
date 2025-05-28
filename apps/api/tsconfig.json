@@ -1,10 +1,10 @@
 {
-  "extends": "@sourcelane/typescript/library.json",
-  "include": ["src/**/*"],
+  "extends": "@sourcelane/typescript/node.json",
+  "include": ["src/**/*", "@types/*.d.ts"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   }
 }
