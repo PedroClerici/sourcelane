@@ -1,6 +1,6 @@
 import 'zod-openapi/extend'
 import { hash } from 'bcryptjs'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
@@ -31,9 +31,28 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
         )
       }
 
+      const [, domain] = email.split('@')
+
+      const autoJoinOrganization = await db.query.organizations.findFirst({
+        where: and(
+          eq(tables.organizations.domain, domain),
+          eq(tables.organizations.shouldAttachUsersByDomain, true),
+        ),
+      })
+
       const passwordHash = await hash(password, 6)
 
-      await db.insert(tables.users).values({ name, email, passwordHash })
+      const [{ userId }] = await db
+        .insert(tables.users)
+        .values({ name, email, passwordHash })
+        .returning({ userId: tables.users.id })
+
+      if (autoJoinOrganization) {
+        await db.insert(tables.members).values({
+          organizationId: autoJoinOrganization.id,
+          userId,
+        })
+      }
 
       return reply.status(201).send()
     },

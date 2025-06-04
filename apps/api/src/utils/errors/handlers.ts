@@ -33,6 +33,7 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
     return reply.status(error.status).send(error.format(request.url))
   }
 
+  console.error(error)
   return reply.status(500).send(new InternalServerError().format(request.url))
 }
 
