@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import autoLoad from '@fastify/autoload'
 import fastifyCors from '@fastify/cors'
+import fastifyJwt from '@fastify/jwt'
 import fastifySwagger from '@fastify/swagger'
 import fastify from 'fastify'
 import {
@@ -58,13 +59,18 @@ app.register(import('@scalar/fastify-api-reference'), {
 })
 
 app.register(fastifyCors)
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+})
 
 app.register(autoLoad, {
   dir: join(__dirname, 'routes'),
+  dirNameRoutePrefix: false,
 })
 
 app.listen({ port: env.PORT }).then(() => {
   const url = `http://${env.ADDRESS}:${env.PORT}`
   console.log(`Server is running on ${url}`)
   console.log(`Access API documentation at ${url}/docs`)
+  console.group
 })
