@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm'
 import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
+import { env } from '@/utils/env'
 import { ConflictError } from '@/utils/errors'
 
 export default async function createAccount(app: FastifyZodOpenApiInstance) {
@@ -13,7 +14,7 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
       summary: 'Create a new account.',
       body: z.object({
         name: z.string().openapi({ example: 'John Doe' }),
-        email: z.string().openapi({ example: 'john.doe@example.com' }),
+        email: z.string().email().openapi({ example: 'john.doe@example.com' }),
         password: z.string().min(6).openapi({ example: '123456' }),
       }),
     },
@@ -40,7 +41,7 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
         ),
       })
 
-      const passwordHash = await hash(password, 6)
+      const passwordHash = await hash(password, env.SALT_ROUNDS)
 
       const [{ userId }] = await db
         .insert(tables.users)
