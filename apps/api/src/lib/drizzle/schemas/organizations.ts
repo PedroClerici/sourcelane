@@ -2,6 +2,7 @@ import { relations, sql } from 'drizzle-orm'
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { invites } from './invites'
 import { members } from './members'
+import { projects } from './projects'
 import { users } from './users'
 
 export const organizations = pgTable('organizations', {
@@ -33,5 +34,6 @@ export const organizationsRelations = relations(
     }),
     invites: many(invites),
     members: many(members),
+    projects: many(projects),
   }),
 )

@@ -1,11 +1,16 @@
 import { defineConfig } from 'drizzle-kit'
+import { env } from "./src/utils/env"
 
 export default defineConfig({
   dialect: 'postgresql',
   schema: './src/lib/drizzle/schemas/*',
-  out: './drizzle',
+  out: './drizzle/migration',
   dbCredentials: {
-    url: 'postgresql://docker:docker@localhost:5432/sourcelane',
+    host: env.DB_HOST,
+    user: env.DB_USER,
+    password: env.DB_PASSWORD,
+    database: env.DB_NAME,
+    port: env.DB_PORT
   },
   // verbose: true,
   strict: true,

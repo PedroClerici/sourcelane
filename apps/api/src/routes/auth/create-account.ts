@@ -26,8 +26,8 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
 
       if (userWithSameEmail) {
         throw new ConflictError(
-          'User already exists.',
-          'A user with the same email already exists.',
+          'User already exists',
+          'A user with the same email already exists',
         )
       }
 

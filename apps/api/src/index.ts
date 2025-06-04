@@ -11,6 +11,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-zod-openapi'
+import { env } from './utils/env'
 import { errorHandler, notFoundHandler } from './utils/errors'
 
 const app = fastify()
@@ -62,10 +63,8 @@ app.register(autoLoad, {
   dir: join(__dirname, 'routes'),
 })
 
-app.listen({ port: 5000 }).then(() => {
-  const url = 'http://localhost:5000'
-  console.log(
-    `Server is running on ${url}.`,
-    `Access API documentation at ${url}/docs.`,
-  )
+app.listen({ port: env.PORT }).then(() => {
+  const url = `http://${env.ADDRESS}:${env.PORT}`
+  console.log(`Server is running on ${url}`)
+  console.log(`Access API documentation at ${url}/docs`)
 })
