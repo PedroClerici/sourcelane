@@ -15,7 +15,7 @@ export default async function authenticateWithPassword(
       tags: ['Auth'],
       summary: 'Authenticate with e-mail & password.',
       body: z.object({
-        email: z.string().openapi({ example: 'john.doe@example.com' }),
+        email: z.string().email().openapi({ example: 'john.doe@example.com' }),
         password: z.string().openapi({ example: '123456' }),
       }),
       response: {

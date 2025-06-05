@@ -1,8 +1,11 @@
-export { accounts } from './accounts'
-export { invites } from './invites'
-export { members } from './members'
-export { membersToProjects } from './members-to-projects'
-export { organizations } from './organizations'
-export { projects } from './projects'
-export { tokens } from './tokens'
-export { users } from './users'
+export { accounts, accountsRelations } from './accounts'
+export { invites, invitesRelations } from './invites'
+export { members, membersRelations } from './members'
+export {
+  membersToProjects,
+  membersToProjectsRelations,
+} from './members-to-projects'
+export { organizations, organizationsRelations } from './organizations'
+export { projects, projectsRelations } from './projects'
+export { tokens, tokensRelations } from './tokens'
+export { users, usersRelations } from './users'
