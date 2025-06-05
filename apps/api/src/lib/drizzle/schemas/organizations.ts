@@ -14,8 +14,8 @@ export const organizations = pgTable('organizations', {
     .notNull()
     .default(false),
   avatarUrl: text('avatar_url'),
-  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { mode: 'string' })
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
     .notNull()
     .defaultNow()
     .$onUpdate(() => sql`now()`),

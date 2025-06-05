@@ -7,7 +7,7 @@ export const tokenType = pgEnum('token_type', ['PASSWORD_RECOVER'])
 export const tokens = pgTable('tokens', {
   id: uuid().primaryKey().defaultRandom(),
   type: tokenType().notNull(),
-  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 
   userId: uuid('user_id')
     .notNull()
