@@ -3,26 +3,21 @@ import { z } from 'zod'
 import { auth } from '@/middlewares/auth'
 import 'zod-openapi/extend'
 import { organizationSchema } from '@sourcelane/auth'
-import { and, eq, ne } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { ConflictError, ForbiddenError } from '@/utils/errors'
+import { ForbiddenError } from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function updateOrganization(app: FastifyZodOpenApiInstance) {
-  app.register(auth).put(
+  app.register(auth).delete(
     '/organizations/:organizationSlug',
     {
       schema: {
         tags: ['Organization'],
-        summary: 'Update organization details.',
+        summary: 'Shutdown organization.',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
-        }),
-        body: z.object({
-          name: z.string().openapi({ example: 'acme' }),
-          domain: z.string().toLowerCase().nullish(),
-          shouldAttachUsersByDomain: z.boolean().optional(),
         }),
         response: {
           204: z.null(),
@@ -31,7 +26,6 @@ export default function updateOrganization(app: FastifyZodOpenApiInstance) {
     },
     async (request, replay) => {
       const { organizationSlug } = request.params
-      const { name, domain, shouldAttachUsersByDomain } = request.body
 
       const { membership, organization } =
         await request.getUserMembership(organizationSlug)
@@ -40,34 +34,14 @@ export default function updateOrganization(app: FastifyZodOpenApiInstance) {
 
       const { cannot } = getUserPermissions(membership.userId, membership.role)
 
-      if (cannot('update', authOrganization)) {
+      if (cannot('delete', authOrganization)) {
         throw new ForbiddenError(
-          `You're no allowed to update this organization`,
+          `You're no allowed to shutdown this organization`,
         )
       }
 
-      if (domain) {
-        const organizationByDomain = await db.query.organizations.findFirst({
-          where: and(
-            eq(tables.organizations.domain, domain),
-            ne(tables.organizations.id, organization.id),
-          ),
-        })
-
-        if (organizationByDomain) {
-          throw new ConflictError(
-            'Organization with the same domain already exists',
-          )
-        }
-      }
-
       await db
-        .update(tables.organizations)
-        .set({
-          name,
-          domain,
-          shouldAttachUsersByDomain,
-        })
+        .delete(tables.organizations)
         .where(eq(tables.organizations.id, organization.id))
 
       return replay.status(204).send()
