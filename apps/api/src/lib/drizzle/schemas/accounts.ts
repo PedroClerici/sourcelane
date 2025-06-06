@@ -13,7 +13,7 @@ export const accounts = pgTable(
 
     userId: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
   },
   table => [uniqueIndex().on(table.provider, table.userId)],
 )

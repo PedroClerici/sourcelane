@@ -21,10 +21,12 @@ export const invites = pgTable(
       .notNull()
       .defaultNow(),
 
-    userId: uuid('user_id').references(() => users.id),
+    userId: uuid('user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
     organizationId: uuid('organization_id')
       .notNull()
-      .references(() => organizations.id),
+      .references(() => organizations.id, { onDelete: 'cascade' }),
   },
   table => [
     uniqueIndex().on(table.email, table.organizationId),

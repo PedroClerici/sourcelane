@@ -11,7 +11,7 @@ export const tokens = pgTable('tokens', {
 
   userId: uuid('user_id')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade' }),
 })
 
 export const tokensRelations = relations(tokens, ({ one }) => ({

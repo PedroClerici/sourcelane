@@ -21,7 +21,7 @@ export const projects = pgTable('projects', {
     .references(() => users.id),
   organizationId: uuid('organization_id')
     .notNull()
-    .references(() => organizations.id),
+    .references(() => organizations.id, { onDelete: 'cascade' }),
 })
 
 export const projectsRelations = relations(projects, ({ one, many }) => ({
