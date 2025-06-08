@@ -15,6 +15,13 @@
       "when": 1749175858856,
       "tag": "0001_add-on-delete-constraints",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749239496204,
+      "tag": "0002_alter-user-id-to-author-id-on-invites",
+      "breakpoints": true
     }
   ]
 }

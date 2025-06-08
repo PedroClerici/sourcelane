@@ -21,7 +21,7 @@ export const invites = pgTable(
       .notNull()
       .defaultNow(),
 
-    userId: uuid('user_id').references(() => users.id, {
+    authorId: uuid('author_id').references(() => users.id, {
       onDelete: 'set null',
     }),
     organizationId: uuid('organization_id')
@@ -36,7 +36,7 @@ export const invites = pgTable(
 
 export const invitesRelations = relations(invites, ({ one }) => ({
   author: one(users, {
-    fields: [invites.userId],
+    fields: [invites.authorId],
     references: [users.id],
   }),
   organization: one(organizations, {
