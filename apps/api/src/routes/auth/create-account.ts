@@ -5,18 +5,23 @@ import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import { env } from '@/utils/env'
-import { ConflictError } from '@/utils/errors'
+import { BadRequestError, ConflictError } from '@/utils/errors'
 
 export default async function createAccount(app: FastifyZodOpenApiInstance) {
   app.post('/users', {
     schema: {
       tags: ['Auth'],
-      summary: 'Create a new account.',
+      summary: 'Create a new account',
       body: z.object({
         name: z.string().openapi({ example: 'John Doe' }),
         email: z.string().email().openapi({ example: 'john.doe@example.com' }),
         password: z.string().min(6).openapi({ example: '123456' }),
       }),
+      response: {
+        201: z.null(),
+        [BadRequestError.status]: BadRequestError.schema,
+        [ConflictError.status]: ConflictError.schema,
+      },
     },
     handler: async (request, reply) => {
       const { name, email, password } = request.body
@@ -26,10 +31,7 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
       })
 
       if (userWithSameEmail) {
-        throw new ConflictError(
-          'User already exists',
-          'A user with the same email already exists',
-        )
+        throw new ConflictError('A user with the same email already exists')
       }
 
       const [, domain] = email.split('@')

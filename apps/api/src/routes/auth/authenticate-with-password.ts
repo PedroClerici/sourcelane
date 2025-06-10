@@ -13,7 +13,7 @@ export default async function authenticateWithPassword(
   app.post('/sessions/password', {
     schema: {
       tags: ['Auth'],
-      summary: 'Authenticate with e-mail & password.',
+      summary: 'Authenticate with e-mail & password',
       body: z.object({
         email: z.string().email().openapi({ example: 'john.doe@example.com' }),
         password: z.string().openapi({ example: '123456' }),
@@ -22,6 +22,7 @@ export default async function authenticateWithPassword(
         201: z.object({
           token: z.string().jwt(),
         }),
+        [UnauthorizedError.status]: UnauthorizedError.schema,
       },
     },
     handler: async (request, reply) => {

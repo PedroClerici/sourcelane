@@ -5,7 +5,11 @@ import 'zod-openapi/extend'
 import { organizationSchema } from '@sourcelane/auth'
 import { eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { ForbiddenError } from '@/utils/errors'
+import {
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function updateOrganization(app: FastifyZodOpenApiInstance) {
@@ -13,14 +17,17 @@ export default function updateOrganization(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug',
     {
       schema: {
-        tags: ['Organization'],
-        summary: 'Shutdown organization.',
+        tags: ['Organizations'],
+        summary: 'Shutdown organization',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
         }),
         response: {
           204: z.null(),
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ForbiddenError.status]: ForbiddenError.schema,
         },
       },
     },

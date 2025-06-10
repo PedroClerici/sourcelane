@@ -4,7 +4,13 @@ import { auth } from '@/middlewares/auth'
 import 'zod-openapi/extend'
 import { and, eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { BadRequestError, ConflictError, ForbiddenError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function createInvite(app: FastifyZodOpenApiInstance) {
@@ -12,8 +18,8 @@ export default function createInvite(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/invites',
     {
       schema: {
-        tags: ['Invite'],
-        summary: 'Create a new invite.',
+        tags: ['Invites'],
+        summary: 'Create a new invite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
@@ -26,6 +32,11 @@ export default function createInvite(app: FastifyZodOpenApiInstance) {
           201: z.object({
             inviteId: z.string().uuid(),
           }),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ForbiddenError.status]: ForbiddenError.schema,
+          [ConflictError.status]: ConflictError.schema,
         },
       },
     },
@@ -47,7 +58,7 @@ export default function createInvite(app: FastifyZodOpenApiInstance) {
         organization.shouldAttachUsersByDomain &&
         organization.domain === domain
       ) {
-        throw new BadRequestError(
+        throw new ConflictError(
           `Users with "${domain}" will join your organization automatically on login`,
         )
       }

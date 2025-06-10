@@ -12,7 +12,7 @@ export default async function requestPasswordRecovery(
   app.register(auth).post('/password/recovery', {
     schema: {
       tags: ['Auth'],
-      summary: 'Request password recovery.',
+      summary: 'Request password recovery',
       body: z.object({
         email: z.string().email().openapi({ example: 'john.doe@example.com' }),
         password: z.string().min(6).openapi({ example: '123456' }),

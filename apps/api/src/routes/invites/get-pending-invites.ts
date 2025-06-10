@@ -4,15 +4,20 @@ import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import 'zod-openapi/extend'
 import { auth } from '@/middlewares/auth'
-import { ConflictError, NotFoundError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 
 export default function getPendingInvites(app: FastifyZodOpenApiInstance) {
   app.register(auth).get(
     '/pending-invites',
     {
       schema: {
-        tags: ['Invite'],
-        summary: 'Get all user pending invites.',
+        tags: ['Invites'],
+        summary: 'Get all user pending invites',
         security: [{ bearerAuth: [] }],
         response: {
           200: z.object({
@@ -35,6 +40,10 @@ export default function getPendingInvites(app: FastifyZodOpenApiInstance) {
               }),
             ),
           }),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ConflictError.status]: ConflictError.schema,
         },
       },
     },

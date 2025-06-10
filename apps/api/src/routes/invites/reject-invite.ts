@@ -4,21 +4,30 @@ import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import 'zod-openapi/extend'
 import { auth } from '@/middlewares/auth'
-import { ForbiddenError, NotFoundError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 
 export default function rejectInvite(app: FastifyZodOpenApiInstance) {
   app.register(auth).post(
     '/invites/:inviteId/reject',
     {
       schema: {
-        tags: ['Invite'],
-        summary: 'Reject an invite.',
+        tags: ['Invites'],
+        summary: 'Reject an invite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           inviteId: z.string().uuid(),
         }),
         response: {
           204: z.null(),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ForbiddenError.status]: ForbiddenError.schema,
         },
       },
     },

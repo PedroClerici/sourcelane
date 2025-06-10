@@ -4,7 +4,12 @@ import { auth } from '@/middlewares/auth'
 import 'zod-openapi/extend'
 import { and, eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { ForbiddenError, NotFoundError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function revokeInvite(app: FastifyZodOpenApiInstance) {
@@ -12,8 +17,8 @@ export default function revokeInvite(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/invites/:inviteId',
     {
       schema: {
-        tags: ['Invite'],
-        summary: 'Revoke an invite.',
+        tags: ['Invites'],
+        summary: 'Revoke an invite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
@@ -21,6 +26,10 @@ export default function revokeInvite(app: FastifyZodOpenApiInstance) {
         }),
         response: {
           204: z.null(),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ForbiddenError.status]: ForbiddenError.schema,
         },
       },
     },

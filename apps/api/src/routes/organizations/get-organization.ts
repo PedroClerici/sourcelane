@@ -2,14 +2,15 @@ import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { auth } from '@/middlewares/auth'
 import 'zod-openapi/extend'
+import { NotFoundError, UnauthorizedError } from '@/utils/errors'
 
 export default function getOrganization(app: FastifyZodOpenApiInstance) {
   app.register(auth).get(
     '/organizations/:organizationSlug',
     {
       schema: {
-        tags: ['Organization'],
-        summary: 'Get details from organization.',
+        tags: ['Organizations'],
+        summary: 'Get details from organization',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
@@ -28,6 +29,8 @@ export default function getOrganization(app: FastifyZodOpenApiInstance) {
               ownerId: z.string().uuid(),
             }),
           }),
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
         },
       },
     },

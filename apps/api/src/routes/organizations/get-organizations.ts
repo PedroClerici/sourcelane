@@ -4,14 +4,15 @@ import 'zod-openapi/extend'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
+import { NotFoundError, UnauthorizedError } from '@/utils/errors'
 
 export default function getOrganizations(app: FastifyZodOpenApiInstance) {
   app.register(auth).get(
     '/organizations',
     {
       schema: {
-        tags: ['Organization'],
-        summary: 'Get organizations where user is member.',
+        tags: ['Organizations'],
+        summary: 'Get organizations where user is member',
         security: [{ bearerAuth: [] }],
         response: {
           200: z.object({
@@ -25,6 +26,8 @@ export default function getOrganizations(app: FastifyZodOpenApiInstance) {
               }),
             ),
           }),
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
         },
       },
     },

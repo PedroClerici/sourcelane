@@ -4,7 +4,11 @@ import { auth } from '@/middlewares/auth'
 import 'zod-openapi/extend'
 import { and, eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { ForbiddenError, NotFoundError } from '@/utils/errors'
+import {
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function getProject(app: FastifyZodOpenApiInstance) {
@@ -12,8 +16,8 @@ export default function getProject(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/projects/:projectSlug',
     {
       schema: {
-        tags: ['Project'],
-        summary: 'Get project details.',
+        tags: ['Projects'],
+        summary: 'Get project details',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
@@ -36,6 +40,9 @@ export default function getProject(app: FastifyZodOpenApiInstance) {
               }),
             }),
           }),
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ForbiddenError.status]: ForbiddenError.schema,
         },
       },
     },

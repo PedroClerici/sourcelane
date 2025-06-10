@@ -6,19 +6,21 @@ import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import { auth } from '@/middlewares/auth'
 import { env } from '@/utils/env'
-import { UnauthorizedError } from '@/utils/errors'
+import { BadRequestError, UnauthorizedError } from '@/utils/errors'
 
 export default async function resetPassword(app: FastifyZodOpenApiInstance) {
   app.register(auth).post('/password/reset', {
     schema: {
       tags: ['Auth'],
-      summary: 'Reset password.',
+      summary: 'Reset password',
       body: z.object({
         code: z.string().uuid(),
         password: z.string().min(6).openapi({ example: '123456' }),
       }),
       response: {
         204: z.null(),
+        [BadRequestError.status]: BadRequestError.schema,
+        [UnauthorizedError.status]: UnauthorizedError.schema,
       },
     },
     handler: async (request, reply) => {

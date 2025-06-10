@@ -3,15 +3,15 @@ import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import 'zod-openapi/extend'
-import { NotFoundError } from '@/utils/errors'
+import { BadRequestError, NotFoundError } from '@/utils/errors'
 
 export default function getInvite(app: FastifyZodOpenApiInstance) {
   app.get(
     '/invites/:inviteId',
     {
       schema: {
-        tags: ['Invite'],
-        summary: 'Get an invite.',
+        tags: ['Invites'],
+        summary: 'Get an invite',
         params: z.object({
           inviteId: z.string().uuid(),
         }),
@@ -34,6 +34,8 @@ export default function getInvite(app: FastifyZodOpenApiInstance) {
                 .nullable(),
             }),
           }),
+          [BadRequestError.status]: BadRequestError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
         },
       },
     },

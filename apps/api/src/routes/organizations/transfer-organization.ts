@@ -5,7 +5,13 @@ import 'zod-openapi/extend'
 import { organizationSchema } from '@sourcelane/auth'
 import { eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { BadRequestError, ForbiddenError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function transferOrganization(app: FastifyZodOpenApiInstance) {
@@ -13,8 +19,8 @@ export default function transferOrganization(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/owner',
     {
       schema: {
-        tags: ['Organization'],
-        summary: 'Update organization details.',
+        tags: ['Organizations'],
+        summary: 'Update organization details',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
@@ -24,6 +30,10 @@ export default function transferOrganization(app: FastifyZodOpenApiInstance) {
         }),
         response: {
           204: z.null(),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ConflictError.status]: ConflictError.schema,
         },
       },
     },
@@ -49,7 +59,7 @@ export default function transferOrganization(app: FastifyZodOpenApiInstance) {
       })
 
       if (!transferToMembership) {
-        throw new BadRequestError(
+        throw new ConflictError(
           'Target user is not member of this organization',
         )
       }

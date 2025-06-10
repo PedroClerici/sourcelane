@@ -4,13 +4,17 @@ import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import { auth } from '@/middlewares/auth'
-import { NotFoundError } from '@/utils/errors'
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 
 export default async function getProfile(app: FastifyZodOpenApiInstance) {
   app.register(auth).get('/profile', {
     schema: {
       tags: ['Auth'],
-      summary: 'Get authenticated user profile.',
+      summary: 'Get authenticated user profile',
       security: [{ bearerAuth: [] }],
       response: {
         200: z.object({
@@ -24,6 +28,9 @@ export default async function getProfile(app: FastifyZodOpenApiInstance) {
             avatarUrl: z.string().url().nullable(),
           }),
         }),
+        [BadRequestError.status]: BadRequestError.schema,
+        [UnauthorizedError.status]: UnauthorizedError.schema,
+        [NotFoundError.status]: NotFoundError.schema,
       },
     },
     handler: async (request, reply) => {

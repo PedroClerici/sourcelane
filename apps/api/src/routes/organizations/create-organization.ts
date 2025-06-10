@@ -5,15 +5,20 @@ import 'zod-openapi/extend'
 import { eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
 import { createSlug } from '@/utils/create-slug'
-import { ConflictError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 
 export default function createOrganization(app: FastifyZodOpenApiInstance) {
   app.register(auth).post(
     '/organizations',
     {
       schema: {
-        tags: ['Organization'],
-        summary: 'Create a new organization.',
+        tags: ['Organizations'],
+        summary: 'Create a new organization',
         security: [{ bearerAuth: [] }],
         body: z.object({
           name: z.string().openapi({ example: 'acme' }),
@@ -24,6 +29,10 @@ export default function createOrganization(app: FastifyZodOpenApiInstance) {
           201: z.object({
             organizationId: z.string().uuid(),
           }),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ConflictError.status]: ConflictError.schema,
         },
       },
     },

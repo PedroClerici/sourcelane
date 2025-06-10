@@ -4,7 +4,12 @@ import { auth } from '@/middlewares/auth'
 import 'zod-openapi/extend'
 import { and, eq } from 'drizzle-orm'
 import { db, tables } from '@/lib/drizzle'
-import { ForbiddenError, NotFoundError } from '@/utils/errors'
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export default function updateMember(app: FastifyZodOpenApiInstance) {
@@ -12,8 +17,8 @@ export default function updateMember(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/members/:memberId',
     {
       schema: {
-        tags: ['Member'],
-        summary: 'Remove a member from the organization.',
+        tags: ['Members'],
+        summary: 'Remove a member from the organization',
         security: [{ bearerAuth: [] }],
         params: z.object({
           memberId: z.string().uuid(),
@@ -21,6 +26,10 @@ export default function updateMember(app: FastifyZodOpenApiInstance) {
         }),
         response: {
           204: z.null(),
+          [BadRequestError.status]: BadRequestError.schema,
+          [UnauthorizedError.status]: UnauthorizedError.schema,
+          [NotFoundError.status]: NotFoundError.schema,
+          [ForbiddenError.status]: ForbiddenError.schema,
         },
       },
     },
