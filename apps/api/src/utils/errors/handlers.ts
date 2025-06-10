@@ -23,7 +23,6 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
       .status(400)
       .send(
         new BadRequestError(
-          'Validation error',
           'One or more fields in your request are invalid. Please check the `issues` array for more details',
         ).format(request.url, zodIssues),
       )
@@ -34,7 +33,13 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
   }
 
   console.error(error)
-  return reply.status(500).send(new InternalServerError().format(request.url))
+  return reply
+    .status(500)
+    .send(
+      new InternalServerError(
+        'An unexpected server error prevented the request from being completed.',
+      ).format(request.url),
+    )
 }
 
 export const notFoundHandler = (
@@ -45,7 +50,6 @@ export const notFoundHandler = (
     .status(404)
     .send(
       new NotFoundError(
-        'Not found',
         `The requested resource '${request.url}' could not be found on this server`,
       ).format(request.url),
     )
