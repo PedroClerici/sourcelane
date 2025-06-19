@@ -12,13 +12,14 @@ import {
 } from '@/utils/errors'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export default function updateMember(app: FastifyZodOpenApiInstance) {
+export default function removeMember(app: FastifyZodOpenApiInstance) {
   app.register(auth).delete(
     '/organizations/:organizationSlug/members/:memberId',
     {
       schema: {
-        tags: ['Members'],
-        summary: 'Remove a member from the organization',
+        tags: ['Member'],
+        summary: 'Remove a member from the organization.',
+        operationId: 'removeMember',
         security: [{ bearerAuth: [] }],
         params: z.object({
           memberId: z.string().uuid(),

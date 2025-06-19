@@ -18,8 +18,9 @@ export default function deleteProject(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/projects/:projectId',
     {
       schema: {
-        tags: ['Projects'],
-        summary: 'Delete a project',
+        tags: ['Project'],
+        summary: 'Delete a project.',
+        operationId: 'deleteProject',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

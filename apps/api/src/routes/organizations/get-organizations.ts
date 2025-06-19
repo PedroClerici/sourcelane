@@ -11,8 +11,9 @@ export default function getOrganizations(app: FastifyZodOpenApiInstance) {
     '/organizations',
     {
       schema: {
-        tags: ['Organizations'],
-        summary: 'Get organizations where user is member',
+        tags: ['Organization'],
+        summary: 'Get organizations where user is member.',
+        operationId: 'getOrganizations',
         security: [{ bearerAuth: [] }],
         response: {
           200: z.object({

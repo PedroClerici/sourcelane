@@ -5,7 +5,7 @@ import type { FastifyZodOpenApiInstance } from 'fastify-zod-openapi'
 import { z } from 'zod'
 import { db, tables } from '@/lib/drizzle'
 import { env } from '@/utils/env'
-import { UnauthorizedError } from '@/utils/errors'
+import { BadRequestError, UnauthorizedError } from '@/utils/errors'
 
 export default async function authenticateWithPassword(
   app: FastifyZodOpenApiInstance,
@@ -13,7 +13,8 @@ export default async function authenticateWithPassword(
   app.post('/sessions/password', {
     schema: {
       tags: ['Auth'],
-      summary: 'Authenticate with e-mail & password',
+      summary: 'Authenticate with e-mail & password.',
+      operationId: 'authenticateWithPassword',
       body: z.object({
         email: z.string().email().openapi({ example: 'john.doe@example.com' }),
         password: z.string().openapi({ example: '123456' }),
@@ -22,6 +23,7 @@ export default async function authenticateWithPassword(
         201: z.object({
           token: z.string().jwt(),
         }),
+        [BadRequestError.status]: BadRequestError.schema,
         [UnauthorizedError.status]: UnauthorizedError.schema,
       },
     },

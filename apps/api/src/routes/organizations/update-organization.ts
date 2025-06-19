@@ -19,8 +19,9 @@ export default function updateOrganization(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug',
     {
       schema: {
-        tags: ['Organizations'],
-        summary: 'Update organization details',
+        tags: ['Organization'],
+        summary: 'Update organization details.',
+        operationId: 'updateOrganization',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

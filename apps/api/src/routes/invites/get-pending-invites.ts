@@ -16,8 +16,9 @@ export default function getPendingInvites(app: FastifyZodOpenApiInstance) {
     '/pending-invites',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Get all user pending invites',
+        tags: ['Invite'],
+        summary: 'Get all user pending invites.',
+        operationId: 'getPendingInvites',
         security: [{ bearerAuth: [] }],
         response: {
           200: z.object({

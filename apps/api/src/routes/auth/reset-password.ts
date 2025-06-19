@@ -12,7 +12,8 @@ export default async function resetPassword(app: FastifyZodOpenApiInstance) {
   app.register(auth).post('/password/reset', {
     schema: {
       tags: ['Auth'],
-      summary: 'Reset password',
+      summary: 'Reset account password.',
+      operationId: 'resetPassword',
       body: z.object({
         code: z.string().uuid(),
         password: z.string().min(6).openapi({ example: '123456' }),

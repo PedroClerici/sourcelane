@@ -10,8 +10,9 @@ export default function getInvite(app: FastifyZodOpenApiInstance) {
     '/invites/:inviteId',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Get an invite',
+        tags: ['Invite'],
+        summary: 'Get an invite.',
+        operationId: 'getInvite',
         params: z.object({
           inviteId: z.string().uuid(),
         }),

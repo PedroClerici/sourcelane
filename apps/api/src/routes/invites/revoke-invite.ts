@@ -17,8 +17,9 @@ export default function revokeInvite(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/invites/:inviteId',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Revoke an invite',
+        tags: ['Invite'],
+        summary: 'Revoke an invite.',
+        operationId: 'revokeInvite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

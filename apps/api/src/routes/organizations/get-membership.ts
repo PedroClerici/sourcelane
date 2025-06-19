@@ -12,8 +12,9 @@ export default async function (app: FastifyZodOpenApiInstance) {
     'organizations/:organizationSlug/membership',
     {
       schema: {
-        tags: ['Organizations'],
-        summary: 'Get user membership on organization',
+        tags: ['Organization'],
+        summary: 'Get user membership on organization.',
+        operationId: 'getMembership',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

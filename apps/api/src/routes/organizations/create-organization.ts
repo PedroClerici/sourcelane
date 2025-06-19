@@ -17,8 +17,9 @@ export default function createOrganization(app: FastifyZodOpenApiInstance) {
     '/organizations',
     {
       schema: {
-        tags: ['Organizations'],
-        summary: 'Create a new organization',
+        tags: ['Organization'],
+        summary: 'Create a new organization.',
+        operationId: 'createOrganization',
         security: [{ bearerAuth: [] }],
         body: z.object({
           name: z.string().openapi({ example: 'acme' }),

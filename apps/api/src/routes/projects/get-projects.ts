@@ -16,8 +16,9 @@ export default function getProjects(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/projects',
     {
       schema: {
-        tags: ['Projects'],
-        summary: 'Get organization projects',
+        tags: ['Project'],
+        summary: 'Get organization projects.',
+        operationId: 'getProjects',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

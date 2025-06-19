@@ -16,8 +16,9 @@ export default function acceptInvite(app: FastifyZodOpenApiInstance) {
     '/invites/:inviteId/accept',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Accept an invite',
+        tags: ['Invite'],
+        summary: 'Accept an invite.',
+        operationId: 'acceptInvite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           inviteId: z.string().uuid(),

@@ -16,8 +16,9 @@ export default function rejectInvite(app: FastifyZodOpenApiInstance) {
     '/invites/:inviteId/reject',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Reject an invite',
+        tags: ['Invite'],
+        summary: 'Reject an invite.',
+        operationId: 'rejectInvite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           inviteId: z.string().uuid(),

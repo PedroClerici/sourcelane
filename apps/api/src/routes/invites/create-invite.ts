@@ -18,8 +18,9 @@ export default function createInvite(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/invites',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Create a new invite',
+        tags: ['Invite'],
+        summary: 'Create a new invite.',
+        operationId: 'createInvite',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

@@ -19,8 +19,9 @@ export default function transferOrganization(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/owner',
     {
       schema: {
-        tags: ['Organizations'],
-        summary: 'Update organization details',
+        tags: ['Organization'],
+        summary: 'Transfer organization ownership.',
+        operationId: 'transferOrganization',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

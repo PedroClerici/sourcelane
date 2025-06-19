@@ -17,8 +17,9 @@ export default function createProject(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/projects',
     {
       schema: {
-        tags: ['Projects'],
-        summary: 'Create a new project',
+        tags: ['Project'],
+        summary: 'Create a new project.',
+        operationId: 'createProject',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

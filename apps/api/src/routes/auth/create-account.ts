@@ -11,7 +11,8 @@ export default async function createAccount(app: FastifyZodOpenApiInstance) {
   app.post('/users', {
     schema: {
       tags: ['Auth'],
-      summary: 'Create a new account',
+      summary: 'Create a new account.',
+      operationId: 'createNewAccount',
       body: z.object({
         name: z.string().openapi({ example: 'John Doe' }),
         email: z.string().email().openapi({ example: 'john.doe@example.com' }),

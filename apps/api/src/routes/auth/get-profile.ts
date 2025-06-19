@@ -14,7 +14,8 @@ export default async function getProfile(app: FastifyZodOpenApiInstance) {
   app.register(auth).get('/profile', {
     schema: {
       tags: ['Auth'],
-      summary: 'Get authenticated user profile',
+      summary: 'Get authenticated user profile.',
+      operationId: 'getProfile',
       security: [{ bearerAuth: [] }],
       response: {
         200: z.object({

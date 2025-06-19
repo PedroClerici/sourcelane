@@ -17,8 +17,9 @@ export default function getInvites(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/invites',
     {
       schema: {
-        tags: ['Invites'],
-        summary: 'Get all organization invites',
+        tags: ['Invite'],
+        summary: 'Get all organization invites.',
+        operationId: 'getInvites',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),

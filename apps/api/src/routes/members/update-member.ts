@@ -17,8 +17,9 @@ export default function updateMember(app: FastifyZodOpenApiInstance) {
     '/organizations/:organizationSlug/members/:memberId',
     {
       schema: {
-        tags: ['Members'],
-        summary: 'Update a member',
+        tags: ['Member'],
+        summary: 'Update a member from the organization.',
+        operationId: 'updateMember',
         security: [{ bearerAuth: [] }],
         params: z.object({
           memberId: z.string().uuid(),

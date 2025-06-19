@@ -19,7 +19,8 @@ export default function updateProject(app: FastifyZodOpenApiInstance) {
     {
       schema: {
         tags: ['Projects'],
-        summary: 'Update Project details',
+        summary: 'Update project details.',
+        operationId: 'updateProject',
         security: [{ bearerAuth: [] }],
         params: z.object({
           organizationSlug: z.string(),
